@@ -138,7 +138,7 @@
 }
 .product-panel.active{
     transform: translate(0px, 0px);
-	-webkit-transform: translate(0, 80%);
+	-webkit-transform: translate(0px, 0px);
 }
 .product-panel .product-view{
     background-color: #ffffff;

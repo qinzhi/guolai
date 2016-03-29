@@ -130,6 +130,7 @@
 </section>
 
 <section class="product-purchasing">
+	<div class="all-shade"></div>
     <div class="product-panel">
         <div class="product-view">
             <div class="product-img">
@@ -179,7 +180,6 @@
         </div>
     </div>
 </section>
-<div class="all-shade opacity5"></div>
 
 </block>
 

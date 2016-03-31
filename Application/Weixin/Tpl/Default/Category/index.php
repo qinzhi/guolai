@@ -41,8 +41,8 @@
                 var tpl = template('categoryTpl',{data:data});
                 category_box.html(tpl);
             }
-            $('#filtrate').bind('keyup',function(){
-                var val = $(this).val().trim();
+			document.getElementById('filtrate').addEventListener('input', function(e){
+				var val = $.trim(e.target.value;);
                 if(val.length > 0){
                     var tmpData = [];
                     $.each(data,function(){
@@ -54,7 +54,7 @@
                 }else{
                     render(data);
                 }
-            });
+			});
         });
     </script>
 </block>

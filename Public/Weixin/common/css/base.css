@@ -437,13 +437,3 @@ article,aside,details,dialog,figcaption,figure,footer,header,hgroup,nav,section,
     /*IE4-IE9*/
     filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
 }
-.all-shade{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #000;
-    z-index: 99;
-    display: none;
-}

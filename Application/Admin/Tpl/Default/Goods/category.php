@@ -69,12 +69,11 @@
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
-                                        <label class="col-lg-4 control-label">上级分类
+                                        <label class="col-lg-4 control-label">分类颜色
                                             <span class="red">*</span>：
                                         </label>
                                         <div class="col-lg-8">
-                                            <input name="p_name" id="p_name" class="form-control" type="text" readonly>
-                                            <input name="p_id" id="p_id" type="hidden"/>
+                                            <input name="color" id="color" class="form-control" type="text">
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
@@ -113,8 +112,13 @@
             </div>
         </div>
     </div>
-    <div id="tree_panel" class="tree_panel">
-        <ul id="tree_category" class="ztree ztree_entity"></ul>
+    <div id="color_panel" class="tree_panel">
+        <ul class="color-box">
+            <li class="color-list">1</li>
+            <li class="color-list">2</li>
+            <li class="color-list">3</li>
+            <li class="color-list">4</li>
+        </ul>
     </div>
 </block>
 <block name="js">
@@ -148,6 +152,20 @@
                     }
                 }
             });
+        });
+
+        var panel = $('#color_panel');
+        $('#color').on({
+            focus: function(){
+                panel.css({
+                    left:$(this).offset().left + "px",
+                    top:$(this).offset().top + $(this).outerHeight() - $('.navbar-inner').height() + "px",
+                    width: $(this).outerWidth() + "px"
+                }).slideDown("fast");
+            },
+            blur: function(){
+                panel.slideUp("fast");
+            }
         });
         $('#save').click(function(){
             if(category_id > 0){
@@ -191,170 +209,84 @@
 </script>
 <script src="__JS__/jquery.ztree.all-3.5.min.js"></script>
 <script>
-    //商品分类操作事件
-    var setting = {
-        check: {
-            enable: true,
-            chkStyle: "radio",
-            radioType: 'all'
-        },
-        view: {
-            dblClickExpand: false
-        },
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        callback: {
-            beforeClick: beforeClick,
-            onCheck: onCheck
+$(function(){
+    $('.plugins_category- table').find('.btn-get').click(function(){
+        var tr = $(this).parents('tr');
+        if(!$(tr).hasClass('tr-focus')){
+            $(tr).parent().find('.tr-focus').removeClass('tr-focus');
+            $(tr).addClass('tr-focus');
         }
-    };
-
-    var zNodes = {$tree},
-        zTree = null,
-        category_id = 0;
-
-    function beforeClick(treeId, treeNode) {
-        zTree.checkNode(treeNode, !treeNode.checked, null, true);
-        return false;
-    }
-
-    function onCheck(e, treeId, treeNode) {
-        var nodes = zTree.getCheckedNodes(true),
-            name = [],id=[];
-        for (var i in nodes) {
-            name.push(nodes[i].name);
-            id.push(nodes[i].id);
-        }
-
-        if (name.length > 0 ) name = name.join();
-        if (id.length > 0 ) id = id.join();
-
-        zTree.formOjb.find('input[name=p_name]').val(name);
-        zTree.formOjb.find('input[name=p_id]').val(id);
-        zTree.formOjb.find('input[name=level]').val(treeNode.level);
-    }
-
-    function hideMenu() {
-        $("#tree_panel").slideUp("fast");
-        $("body").unbind("mousedown", onBodyDown);
-    }
-
-    function onBodyDown(event) {
-        if (!(event.target.id == "p_name" || event.target.id == "tree_panel" || $(event.target).parents("#tree_panel").length>0)) {
-            hideMenu();
-        }
-    }
-
-    $(document).ready(function(){
-
-        zTree = $.fn.zTree.init($("#tree_category"), setting, zNodes);
-
-        $(this).on('click','input[name=p_name]',function(){
-            var form = $(this).parents('form');
-            var type = form.data('action');
-            zTree.formOjb = form;
-            var p_id = form.find('input[name=p_id]').val();
-            if(p_id != ''){
-                p_id = Number(p_id);
+        var form = document.getElementById('form-edit');
+        $.fruiter.post("{:U('GoodsCategory/getCategory')}",{id:$(tr).data('id')},function(data){
+            if(data){
+                category_id = data.id;
+                form.name.value = data.name;
+                form.p_id.value = data.pid;
+                form.title.value = data.title;
+                form.keywords.value = data.keywords;
+                form.descript.value = data.descript;
                 var nodes = zTree.getNodes();
                 for(var i in nodes){
-                    if(nodes[i].id == p_id){
+                    if(data.pid == 0 || nodes[i].id == data.pid){
                         nodes[i].checked = 'checked';
                         zTree.updateNode(nodes[i],false);
+                        form.p_name.value = nodes[i].name;
                         break;
                     }
                 }
             }
-
-            $("#tree_panel").css({
-                left:$(this).offset().left + "px",
-                top:$(this).offset().top + $(this).outerHeight() - $('.navbar-inner').height() + "px",
-                width: $(this).outerWidth() + "px"
-            }).slideDown("fast");
-
-            $("body").bind("mousedown", onBodyDown);
         });
+    });
 
-        $('.plugins_category- table').find('.btn-get').click(function(){
-            var tr = $(this).parents('tr');
-            if(!$(tr).hasClass('tr-focus')){
-                $(tr).parent().find('.tr-focus').removeClass('tr-focus');
-                $(tr).addClass('tr-focus');
-            }
-            var form = document.getElementById('form-edit');
-            $.fruiter.post("{:U('GoodsCategory/getCategory')}",{id:$(tr).data('id')},function(data){
-                if(data){
-                    category_id = data.id;
-                    form.name.value = data.name;
-                    form.p_id.value = data.pid;
-                    form.title.value = data.title;
-                    form.keywords.value = data.keywords;
-                    form.descript.value = data.descript;
-                    var nodes = zTree.getNodes();
-                    for(var i in nodes){
-                        if(data.pid == 0 || nodes[i].id == data.pid){
-                            nodes[i].checked = 'checked';
-                            zTree.updateNode(nodes[i],false);
-                            form.p_name.value = nodes[i].name;
+    $('.plugins_category- table').find('.btn-move').click(function(){
+        var action = $(this).data('action');
+        var tr = $(this).parents('tr');
+        if(!$(tr).hasClass('tr-focus')){
+            $(tr).parent().find('.tr-focus').removeClass('tr-focus');
+            $(tr).addClass('tr-focus');
+        }
+        var pid = $(tr).data('pid');
+        var trs = $(tr).parents('tbody').find('tr[data-pid='+pid+']');
+        if(tr.data('id') == $(trs[0]).data('id') && action == 'up' ){
+            Notify('无法上移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
+        }else if(tr.data('id') == $(trs[trs.length-1]).data('id') && action == 'down' ){
+            Notify('无法下移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
+        }else{
+            $.fruiter.post("{:U('GoodsCategory/move')}",{id:$(tr).data('id'),action:action},function(data){
+                if(data.code == 1){
+                    for(var i in trs){
+                        if($(trs[i]).data('id') == tr.data('id')){
+                            if(action == 'up'){
+                                $('tr[data-path^=' + tr.data('path') + ']').insertBefore($(trs[parseInt(i)-1]));
+                            }else if(action == 'down'){
+                                $('tr[data-path^=' + tr.data('path') + ']').insertAfter($(trs[parseInt(i)+1]));
+                            }
                             break;
                         }
                     }
+                    Notify(data.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
+                }else{
+                    Notify(data.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
                 }
             });
-        });
-
-        $('.plugins_category- table').find('.btn-move').click(function(){
-            var action = $(this).data('action');
-            var tr = $(this).parents('tr');
-            if(!$(tr).hasClass('tr-focus')){
-                $(tr).parent().find('.tr-focus').removeClass('tr-focus');
-                $(tr).addClass('tr-focus');
-            }
-            var pid = $(tr).data('pid');
-            var trs = $(tr).parents('tbody').find('tr[data-pid='+pid+']');
-            if(tr.data('id') == $(trs[0]).data('id') && action == 'up' ){
-                Notify('无法上移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
-            }else if(tr.data('id') == $(trs[trs.length-1]).data('id') && action == 'down' ){
-                Notify('无法下移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
-            }else{
-                $.fruiter.post("{:U('GoodsCategory/move')}",{id:$(tr).data('id'),action:action},function(data){
-                    if(data.code == 1){
-                        for(var i in trs){
-                            if($(trs[i]).data('id') == tr.data('id')){
-                                if(action == 'up'){
-                                    $('tr[data-path^=' + tr.data('path') + ']').insertBefore($(trs[parseInt(i)-1]));
-                                }else if(action == 'down'){
-                                    $('tr[data-path^=' + tr.data('path') + ']').insertAfter($(trs[parseInt(i)+1]));
-                                }
-                                break;
-                            }
-                        }
-                        Notify(data.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
-                    }else{
-                        Notify(data.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
-                    }
-                });
-            }
-        });
-
-        $('.ifold').click(function(){
-            var tr = $(this).parents('tr');
-            var path = tr.data('path');
-            if($(this).hasClass('fa-minus-square-o')){
-                $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
-                    if(index) $(this).hide();
-                });
-                $(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-            }else if($(this).hasClass('fa-plus-square-o')){
-                $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
-                    if(index) $(this).show();
-                });
-                $(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-            }
-        });
+        }
     });
+
+    $('.ifold').click(function(){
+        var tr = $(this).parents('tr');
+        var path = tr.data('path');
+        if($(this).hasClass('fa-minus-square-o')){
+            $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
+                if(index) $(this).hide();
+            });
+            $(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+        }else if($(this).hasClass('fa-plus-square-o')){
+            $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
+                if(index) $(this).show();
+            });
+            $(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+        }
+    });
+});
 </script>
 </block>

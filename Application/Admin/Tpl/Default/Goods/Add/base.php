@@ -55,42 +55,42 @@
                 <table class="table table-bordered table-hover table-border">
                     <thead>
                         <tr>
-                            <th class="base">商品货号</th>
-                            <th class="base">库存</th>
-                            <th class="base">重量(千克)</th>
-                            <!--<th class="base">购买成功增加积分</th>-->
-                            <th class="base">排序</th>
-                            <th class="base">计量单位显示</th>
+                            <th>商品货号</th>
+                            <th>成本价</th>
+                            <th>库存</th>
+                            <th>重量(千克)</th>
+                            <th>计量单位显示</th>
+                            <th>排序</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="base">
-                            <td class="base">
+                        <tr>
+                            <td>
                                 <div class="form-group has-feedback no-margin">
                                     <input class="input-xs Lwidth150" type="text" name="_goods_no[]" pattern="required" maxlength="20">
                                 </div>
                             </td>
-                            <td class="base">
+                            <td>
+                                <div class="form-group has-feedback no-margin">
+                                    <input class="input-xs Lwidth80" type="text" name="_cost_price[]" pattern="int" maxlength="10">
+                                </div>
+                            </td>
+                            <td>
                                 <div class="form-group has-feedback no-margin">
                                     <input class="input-xs Lwidth80" type="text" name="_store_nums[]" pattern="int" maxlength="10">
                                 </div>
                             </td>
-                            <td class="base">
+                            <td>
                                 <div class="form-group has-feedback no-margin">
                                     <input class="input-xs Lwidth80" type="text" name="_weight[]" pattern="float" maxlength="10">
                                 </div>
                             </td>
-                            <!--<td class="base">
-                                <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_point[]" pattern="float" maxlength="10">
-                                </div>
-                            </td>-->
-                            <td class="base">
+                            <td>
                                 <div class="form-group has-feedback no-margin">
                                     <input class="input-xs Lwidth80" type="text" name="_sort[]" pattern="float" maxlength="10">
                                 </div>
                             </td>
-                            <td class="base">
+                            <td>
                                 <div class="form-group has-feedback no-margin">
                                     <input class="input-xs Lwidth80" type="text" name="_unit[]" pattern="float" maxlength="10">
                                 </div>
@@ -106,30 +106,13 @@
                 <table class="table table-bordered table-hover table-border">
                     <thead>
                         <tr>
-                            <th class="base">购买件数</th>
-                            <th class="base">平台价格</th>
-                            <th class="base">成本价格</th>
+                            <th>购买件数</th>
+                            <th>平台价格</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="base">
-                            <td class="base">
-                                <div class="form-group has-feedback no-margin">
-                                    <span>≥</span>
-                                    <input class="input-xs Lwidth80" type="text" name="_goods_no[]" pattern="required" maxlength="20">
-                                </div>
-                            </td>
-                            <td class="base">
-                                <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_market_price[]" pattern="float" maxlength="10">
-                                </div>
-                            </td>
-                            <td class="base">
-                                <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_cost_price[]" pattern="float" maxlength="10">
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody class="spec-list">
+
                     </tbody>
                 </table>
             </td>
@@ -174,8 +157,42 @@
         </tr>
     </tbody>
 </table>
+<script type="text/html" id="_spec">
+    <tr>
+        <td>
+            <div class="form-group has-feedback no-margin">
+                <span>≥</span>
+                <input class="input-xs Lwidth80" type="text" name="_goods_no[]" pattern="required" maxlength="20">
+            </div>
+        </td>
+        <td>
+            <div class="form-group has-feedback no-margin">
+                <input class="input-xs Lwidth80" type="text" name="_market_price[]" pattern="float" maxlength="10">
+            </div>
+        </td>
+        <td>
+            <a href="javascript:void(0);" class="btn btn-danger btn-xs shiny icon-only white btn-del"><i class="fa fa-times"></i></a>
+        </td>
+    </tr>
+</script>
 <script>
     $(function(){
-
+        var specTpl = template('_spec');
+        var specList = $('.spec-list');
+        specList.append(specTpl).find('td:eq(2)').find('a').remove();
+        $('#addSpec').click(function(){
+            if(specList.children().length >= 3){
+                Notify('最多添加三条批发规则', 'bottom-right', '5000', 'warning', 'fa-warning', true);
+                return;
+            }else
+                specList.append(specTpl).find('tr:last-child').find('a').bind('click',function(){
+                    var me = $(this).closest('tr');
+                    bootbox.confirm("确定要删除么?", function (result) {
+                        if(result){
+                            me.remove();
+                        }
+                    });
+                });
+        });
     });
 </script>

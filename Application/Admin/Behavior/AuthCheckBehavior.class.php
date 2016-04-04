@@ -18,7 +18,7 @@ class AuthCheckBehavior extends Behavior {
         $admin_id = session('_admin_id');
         if(empty($admin_id)){
             $_account = cookie('_account');
-            $_password = cookie('_password');
+            $_password = cookie('_psd');
             if(!empty($_account) && !empty($_password)){
                 $_account = Crypt::decode($_account);
                 $_password = Crypt::decode($_password);

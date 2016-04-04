@@ -125,3 +125,5 @@ ul.tree_menu a.active {background: #EEE none repeat scroll 0 0;display: block;}
 .ul-spec-list li .spec-status{float: right;color: #53a93f;margin-top: 7px;margin-right: 10px;font-size: 16px;}
 .ul-spec-list li:hover{background-color: #EEEEEE;}
 #cke_detail table td{padding: 0 0 0 10px;}
+.color-box{display: block}
+.color-box .color-list{display: inline-block;width: 25%;float: left;}

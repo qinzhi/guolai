@@ -1,6 +1,6 @@
 <?php
 
-define('DB_PREFIX','fruiter_');
+define('DB_PREFIX','guolai_');
 
 return array(
     "LOAD_EXT_FILE"=>"fb",

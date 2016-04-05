@@ -15,16 +15,17 @@ class AuthCheckBehavior extends Behavior {
             }
         }
 
-        $admin_id = session('_admin_id');
+        $admin_id = session('_id');
         if(empty($admin_id)){
-            $_account = cookie('_account');
-            $_password = cookie('_psd');
-            if(!empty($_account) && !empty($_password)){
-                $_account = Crypt::decode($_account);
-                $_password = Crypt::decode($_password);
-                $admin = M('Admin')->where(array('account'=>$_account))->find();
-                if(!empty($admin) && $_password == $admin['password']){
-                    session('_admin_id',$admin['id']);
+            $_auth = cookie('_auth');
+            if(!empty($_auth)){
+                list($_account, $_password, $_id)
+                    = isset($_auth) ? explode("\t", authcode($_auth, 'DECODE')) : array('', '', 0);
+                $admin = M('Admin')->find($_id);
+                if(!empty($admin) && $_account == $admin['account'] && $_password == $admin['password']){
+                    session('_id',$admin['id']);
+                }else{
+                    echo '<p>权限不足,<a href="/login">重新登录</a>。</p>';
                 }
             }else{
                 header('Location: /login');

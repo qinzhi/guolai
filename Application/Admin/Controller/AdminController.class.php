@@ -3,9 +3,12 @@ namespace Admin\Controller;
 use Think\Controller;
 class AdminController extends Controller {
 
-    public function __construct(){
-        parent::__construct();
+    public $_admin_id;
 
+    public function _initialize(){
+
+        $this->_admin_id = session('_id');
+        
         if(!IS_AJAX){
             $menu = D('AuthRole')->get_menu();
             $tree = new \Common\Library\Org\Util\Tree($menu);

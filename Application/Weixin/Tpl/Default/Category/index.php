@@ -28,10 +28,10 @@
     <script>
         $(function(){
             var data = [
-                {id:1,img:'__IMG__/pitaya.png','name':'火龙果'},
-                {id:2,img:'__IMG__/apple.png','name':'苹果'},
-                {id:3,img:'__IMG__/inmato.png','name':'小番茄'},
-                {id:4,img:'__IMG__/reddates.png','name':'红枣'}
+                {id:1,img:'__IMG__/pitaya.png',name:'火龙果'},
+                {id:2,img:'__IMG__/apple.png',name:'苹果'},
+                {id:3,img:'__IMG__/inmato.png',name:'小番茄'},
+                {id:4,img:'__IMG__/reddates.png',name:'红枣'}
             ];
             var category_box = $('ul.category-box');
             if(data.length > 0){
@@ -42,7 +42,7 @@
                 category_box.html(tpl);
             }
 			document.getElementById('filtrate').addEventListener('input', function(e){
-				var val = $.trim(e.target.value;);
+				var val = $.trim(e.target.value);
                 if(val.length > 0){
                     var tmpData = [];
                     $.each(data,function(){

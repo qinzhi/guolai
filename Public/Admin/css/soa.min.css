@@ -125,5 +125,5 @@ ul.tree_menu a.active {background: #EEE none repeat scroll 0 0;display: block;}
 .ul-spec-list li .spec-status{float: right;color: #53a93f;margin-top: 7px;margin-right: 10px;font-size: 16px;}
 .ul-spec-list li:hover{background-color: #EEEEEE;}
 #cke_detail table td{padding: 0 0 0 10px;}
-.color-box{display: block}
-.color-box .color-list{display: inline-block;width: 25%;float: left;}
+.color-box{display: block;background-color: #ffffff;padding: 0;margin: 0;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;}
+.color-box .color-list{display: inline-block;text-align: center;line-height: 45px;color: #ffffff;cursor: default;font-size: 18px;-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;}

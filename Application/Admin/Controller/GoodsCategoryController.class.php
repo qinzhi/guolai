@@ -46,12 +46,10 @@ class GoodsCategoryController extends AdminController {
             if($pid == 0) $level = 0;
             else{
                 $category = $this->category->getCategoryById($pid);
-                $level = $category['level'] + 1;
             }
             $sort = !empty($pcategory) ? ($pcategory['sort'] + 1) : 0;
             $data = array(
                 'pid' => $pid,
-                'level' => $level,
                 'name' => trim(I('request.name')),
                 'sort' => $sort,
             );

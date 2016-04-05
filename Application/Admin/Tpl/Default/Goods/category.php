@@ -73,7 +73,8 @@
                                             <span class="red">*</span>：
                                         </label>
                                         <div class="col-lg-8">
-                                            <input name="color" id="color" class="form-control" type="text">
+                                            <input class="form-control" type="text" id="colorValue" name="colorValue"/>
+                                            <input name="color" id="color" type="hidden">
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
@@ -114,10 +115,14 @@
     </div>
     <div id="color_panel" class="tree_panel">
         <ul class="color-box">
-            <li class="color-list">1</li>
-            <li class="color-list">2</li>
-            <li class="color-list">3</li>
-            <li class="color-list">4</li>
+            <li class="color-list" style="background-color: #ff655b;" data-color="red" data-value="红色">红色</li>
+            <li class="color-list" style="background-color: #f2d659;" data-color="yellow" data-value="黄色">黄色</li>
+            <li class="color-list" style="background-color: #4ece72;" data-color="green" data-value="绿色">绿色</li>
+        </ul>
+        <ul class="color-box">
+            <li class="color-list" style="background-color: #b36edb;" data-color="purple" data-value="紫色">紫色</li>
+            <li class="color-list" style="background-color: #47c2f1;" data-color="blue" data-value="蓝色">蓝色</li>
+            <li class="color-list" style="background-color: #ffffff;" data-color="white" data-value="白色">白色</li>
         </ul>
     </div>
 </block>
@@ -155,16 +160,20 @@
         });
 
         var panel = $('#color_panel');
-        $('#color').on({
+        $('.color-box li').click(function(){
+            var color = $(this).data('color');
+            var value = $(this).data('value');
+            $('#colorValue').val(value);
+            $('#color').val(color);
+            panel.hide();
+        });
+        $('#colorValue').on({
             focus: function(){
                 panel.css({
                     left:$(this).offset().left + "px",
                     top:$(this).offset().top + $(this).outerHeight() - $('.navbar-inner').height() + "px",
                     width: $(this).outerWidth() + "px"
                 }).slideDown("fast");
-            },
-            blur: function(){
-                panel.slideUp("fast");
             }
         });
         $('#save').click(function(){

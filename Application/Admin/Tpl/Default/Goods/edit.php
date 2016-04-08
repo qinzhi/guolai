@@ -127,19 +127,18 @@
 
             create_category_panel();
 
-            $.post('{:U("GoodsCategory/getCategoriesTree")}',function(tree){
-                var zNodes = JSON.parse(tree);
-                var categories_id = $('#category_id').data('value'),categories = [];
-                $('#category_id').val(categories_id.join(','));
-                for(var i in zNodes){
-                    if(categories_id.indexOf(zNodes[i].id) != -1){
-                        zNodes[i].checked = true;
-                        categories.push(zNodes[i].name);
+            var categories = {$categories|json_encode};
+            var category_id = $('#category_id').val();
+            if(!!category_id)
+                for(var i in categories){
+                    if(categories[i].id == category_id){
+                        var name = categories[i].name;
+                        $('#category').val(name);
+                        categories[i].checked = true;
+                        break;
                     }
                 }
-                $('#category').val(categories.join(','));
-                zTree = $.fn.zTree.init($("#tree_category"), setting, zNodes);
-            });
+            zTree = $.fn.zTree.init($("#tree_category"), setting, categories);
 
             $('#goods_save').click(function(){
                 var form = document.getElementById('goodsForm');

@@ -19,7 +19,7 @@
         {{each data as value}}
         <li class="box box-1">
             <a class="category-list" href="javascript:;">
-                <div class="category-img"><img src="{{value.img}}"/></div>
+                <div class="category-img"><img src="{{value.icon}}"/></div>
                 <p class="category-name">{{value.name}}</p>
             </a>
         </li>
@@ -27,12 +27,7 @@
     </script>
     <script>
         $(function(){
-            var data = [
-                {id:1,img:'__IMG__/pitaya.png',name:'火龙果'},
-                {id:2,img:'__IMG__/apple.png',name:'苹果'},
-                {id:3,img:'__IMG__/inmato.png',name:'小番茄'},
-                {id:4,img:'__IMG__/reddates.png',name:'红枣'}
-            ];
+            var data = {$categories|json_encode};
             var category_box = $('ul.category-box');
             if(data.length > 0){
                 render(data);

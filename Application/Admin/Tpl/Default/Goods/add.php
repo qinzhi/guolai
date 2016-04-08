@@ -64,7 +64,9 @@
             check: {
                 enable: true,
                 chkboxType: {"Y":"p", "N":"p"},
-                nocheckInherit: true
+                nocheckInherit: true,
+                radioType: 'all',
+                chkStyle: 'radio'
             },
             view: {
                 dblClickExpand: false
@@ -126,11 +128,8 @@
         $(document).ready(function(){
 
             create_category_panel();
-
-            $.post('{:U("GoodsCategory/getCategoriesTree")}',function(tree){
-                var zNodes = JSON.parse(tree);
-                zTree = $.fn.zTree.init($("#tree_category"), setting, zNodes);
-            });
+            var categories = {$categories|json_encode};
+            zTree = $.fn.zTree.init($("#tree_category"), setting, categories);
 
             $('#goods_save').click(function(){
                 var form = document.getElementById('goodsForm');

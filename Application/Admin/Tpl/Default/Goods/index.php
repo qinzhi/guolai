@@ -37,8 +37,8 @@
                     <table class="table table-hover table-middle">
                         <colgroup>
                             <col width="60px">
-                            <col width="360px">
-                            <col width="180px">
+                            <col width="320px">
+                            <col width="130px">
                             <col width="80px">
                             <col width="80px">
                             <col width="120px">
@@ -69,9 +69,9 @@
                                         </div>
                                     </td>
                                     <td class="input-edit" data-field="name" title="点击更新商品名称">{$vo.name}</td>
-                                    <td class="goods-category" title="点击设置分类">手机</td>
+                                    <td class="goods-category" title="点击设置分类">{$vo.category_name}</td>
                                     <td><a href="javascript:;" class="goods-price" title="点击更新价格">{$vo.sell_price}</a></td>
-                                    <td><a href="javascript:;" class="goods-sku" title="点击更新库存">{$vo.store_nums}</a></td>
+                                    <td class="input-edit" data-field="store_nums" title="点击更新库存">{$vo.store_nums}</td>
                                     <td>
                                         <label class="list-status goods-status">
                                             <input class="checkbox-slider toggle colored-success" type="checkbox" autocomplete="off" {$vo['status']?'checked':''}>
@@ -154,89 +154,7 @@
                 params.status = this.checked ? 1 : 0;
                 _goods.update(params);
             });
-            $('.goods-price').click(function () {
-                var obj = $(this);
-                var goods_id = $(this).closest('tr').find('.goods_id').val();
-                $.dialog({
-                    id : 'setPrice',
-                    title : '设置商品价格',
-                    async : false,
-                    min_width: 600,
-                    min_height: 350,
-                    content : function(){
-                        var content;
-                        $.post("{:U('Goods/product')}",{tpl:'price',id:goods_id},function(data){
-                            content = data;
-                        });
-                        return content;
-                    },
-                    ok : function(target){
-                        var $return = true;
-                        target.find('input[type=text]:visible').each(function(){
-                            if($.validateOnChange(this) === false){
-                                $return = false;
-                            }
-                        });
-                        if($return){
-                            var params = target.find('form').serialize();
-                            $.get("{:U('Goods/update')}",params,function(result){
-                                if(result.code == 1){
-                                    var _default = target.find('input[name=_default]');
-                                    var sell_price = _default.closest('tr').find('input[name="_sell_price[]"]').val();
-                                    obj.text(sell_price);
-                                    Notify(result.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
-                                }else{
-                                    Notify(result.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
-                                }
-                            });
-                        }else
-                            return $return;
-                    }
-                });
-            });
-            $('.goods-sku').click(function () {
-                var obj = $(this);
-                var goods_id = $(this).closest('tr').find('.goods_id').val();
-                $.dialog({
-                    id : 'setSku',
-                    title : '设置商品库存',
-                    async : false,
-                    min_width: 400,
-                    min_height: 250,
-                    content : function(){
-                        var content;
-                        $.post("{:U('Goods/product')}",{tpl:'sku',id:goods_id},function(data){
-                            content = data;
-                        });
-                        return content;
-                    },
-                    ok : function(target){
-                        var $return = true;
-                        target.find('input[type=text]:visible').each(function(){
-                            if($.validateOnChange(this) === false){
-                                $return = false;
-                            }
-                        });
-                        if($return){
-                            var params = target.find('form').serialize();
-                            $.get("{:U('Goods/update')}",params,function(result){
-                                if(result.code == 1){
-                                    var store_nums = target.find('input[name="_store_nums[]"]');
-                                    var total = 0;
-                                    $.each(store_nums,function(){
-                                        total += parseInt(this.value);
-                                    });
-                                    obj.text(total);
-                                    Notify(result.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
-                                }else{
-                                    Notify(result.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
-                                }
-                            });
-                        }else
-                            return $return;
-                    }
-                });
-            });
+
             $('.btn-del').click(function(){
                 var goods_id = $(this).closest('tr').find('.goods_id').val();
                 bootbox.confirm("确定要删除么?", function (result) {
@@ -307,9 +225,12 @@
 
             if($('#tree_category').find('li').length < 1){
                 $('#tree_panel').append('<p style="position: absolute;left:5px;top:5px;">数据获取中...</p>');
-                $.post('{:U("GoodsCategory/getCategoriesTree")}',function(tree){
+                $.post('{:U("GoodsCategory/getCategories")}',function(tree){
                     $('#tree_panel').find('p').remove();
-                    var zNodes = JSON.parse(tree);
+                    var zNodes = tree;
+                    for(var i in zNodes){
+                        delete zNodes[i].icon;
+                    }
                     zTree = $.fn.zTree.init($("#tree_category"), setting, zNodes);
                 });
             }

@@ -19,40 +19,29 @@
                                 <table class="table table-bordered table-condensed table-middle flip-content dataTable">
                                     <thead class="flip-content bordered-palegreen">
                                     <tr>
-                                        <th width="70%">分类名称</th>
+                                        <th width="50%">分类名称</th>
+                                        <th width="20%">状态</th>
                                         <th width="30%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php $show_category = function($category,$level,$path) use (&$show_category){
-                                        if(!empty($category) && is_array($category)):
-                                            $class = '';
-                                            if($level){
-                                                $class = '<span class="margin-left-' . 20 * $level . '"></span>';
-                                            }
-                                            if($level < 2){
-                                                $icon = '<i class="fa row-details fa-minus-square-o ifold"></i>';
-                                            }
-                                            foreach($category as $value):
-                                                $tmp_path = $path . $value['id'] . '_';
-                                                $html = '<tr data-id="' . $value['id'] . '" data-path="' . $tmp_path . '" data-pid="' . $value['pid'] . '">';
-                                                if(empty($value['child'])){
-                                                    $icon = '<i class="fa row-details"></i>';
-                                                }
-                                                $html .= '<td>' . $class . $icon . '&nbsp;<span class="category_name">' .$value['name'] . '</span></td>
-                                                        <td>
-                                                            <a class="btn btn-default btn-xs shiny icon-only success btn-move" href="javascript:void(0);" data-action="up"><i class="fa fa-arrow-up"></i></a>
-                                                            <a class="btn btn-default btn-xs shiny icon-only success btn-move" href="javascript:void(0);" data-action="down"><i class="fa fa-arrow-down"></i></a>
-                                                            <a class="btn btn-success btn-xs shiny icon-only white btn-get" href="javascript:void(0);"><i class="fa fa-edit"></i></a>
-                                                        </td>
-                                                    </tr>';
-                                                echo $html;
-                                                if(!empty($value['child'])):
-                                                    $show_category($value['child'],++$level,$tmp_path);
-                                                endif;
-                                            endforeach;
-                                        endif;
-                                    };$show_category($goodsCategories,0,'path_');?>
+                                        <volist name="categories" id="vo">
+                                            <tr data-id="{$vo.id}">
+                                                <td><img class="icon" src="{$vo.icon}" height="60px" width="60px"/><span class="name">{$vo.name}</span></td>
+                                                <td>
+                                                    <if condition="$vo.status eq 1">
+                                                        <span class="status">开启</span>
+                                                    <else/>
+                                                        <span class="status">关闭</span>
+                                                    </if>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-default btn-xs shiny icon-only success btn-move" href="javascript:void('上移');" data-action="up"><i class="fa fa-arrow-up"></i></a>
+                                                    <a class="btn btn-default btn-xs shiny icon-only success btn-move" href="javascript:void('下移');" data-action="down"><i class="fa fa-arrow-down"></i></a>
+                                                    <a class="btn btn-success btn-xs shiny icon-only white btn-get" href="javascript:void('编辑');"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                        </volist>
                                     </tbody>
                                 </table>
                             </div>
@@ -69,6 +58,40 @@
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
+                                        <label class="col-lg-4 control-label">分类图标
+                                            <span class="red">*</span>：
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" readonly="" name="icon" id="icon-edit" pattern="required" class="form-control">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default btn-success" onclick="BrowseServer('icon-edit');" type="button">选择图片</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <label class="col-lg-4 control-label">开启状态
+                                            <span class="red">*</span>：
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <span class="control-group">
+                                                <div class="radio line-radio">
+                                                    <label class="no-padding">
+                                                        <input type="radio" value="1" name="status">
+                                                        <span class="text">开启</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio line-radio">
+                                                    <label>
+                                                        <input type="radio" value="0" name="status">
+                                                        <span class="text">关闭</span>
+                                                    </label>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group has-feedback">
                                         <label class="col-lg-4 control-label">分类颜色
                                             <span class="red">*</span>：
                                         </label>
@@ -76,7 +99,7 @@
                                             <input class="form-control" type="text" id="colorValue" name="colorValue"/>
                                             <input name="color" id="color" type="hidden">
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="form-group has-feedback">
                                         <label class="col-lg-4 control-label">SEO标题：</label>
                                         <div class="col-lg-8">
@@ -113,7 +136,7 @@
             </div>
         </div>
     </div>
-    <div id="color_panel" class="tree_panel">
+    <!--<div id="color_panel" class="tree_panel">
         <ul class="color-box">
             <li class="color-list" style="background-color: #ff655b;" data-color="red" data-value="红色">红色</li>
             <li class="color-list" style="background-color: #f2d659;" data-color="yellow" data-value="黄色">黄色</li>
@@ -124,21 +147,24 @@
             <li class="color-list" style="background-color: #47c2f1;" data-color="blue" data-value="蓝色">蓝色</li>
             <li class="color-list" style="background-color: #ffffff;" data-color="white" data-value="白色">白色</li>
         </ul>
-    </div>
+    </div>-->
 </block>
 <block name="js">
 <script>
+    var category = {},tr = null;
     $(function(){
         $('#add').click(function(){
             bootbox.dialog({
                 message: function(){
                     var form = $('#addModal .col-md-12 .form-category');
                     if(form.html() == ''){
-                        form.append($('form.form-category').html());
+                        var html = $('form.form-category').html();
+                        html = html.replace(/icon-edit/g,'icon-tmp');
+                        form.append(html);
                     }
                     else{form[0].reset();}
                     form.find('.position-root').hide();
-                    return $("#addModal").html();
+                    return $("#addModal").html().replace(/icon-tmp/g,'icon-add');
                 },
                 title: "添加分类",
                 className: "modal-sky",
@@ -177,16 +203,17 @@
             }
         });
         $('#save').click(function(){
-            if(category_id > 0){
+            if(category.id > 0){
                 var query = $('.plugins_category- form').serialize();
-                query += '&id=' + category_id;
-                $.fruiter.post('{:U("GoodsCategory/edit")}',{params:encodeURIComponent(query)},function(data){
-                    if(data.code == 1){
-                        $('.plugins_category- .dataTable').find('tr[data-id='+category_id+']')
-                            .find('.category_name').text($('.plugins_category- form').find('input[name=name]').val());
-                        Notify(data.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
+                query += '&id=' + category.id;
+                $.fruiter.post('{:U("GoodsCategory/edit")}',{params:encodeURIComponent(query)},function(result){
+                    if(result.code == 1){
+                        tr.find('.name').text(result.data.name);
+                        tr.find('.icon').text(result.data.icon);
+                        tr.find('.status').text((result.data.status)?'开启':'关闭');
+                        Notify(result.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
                     }else{
-                        Notify(data.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
+                        Notify(result.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
                     }
                 });
             }else{
@@ -194,14 +221,13 @@
             }
         });
         $('#delete').click(function(){
-            if(category_id > 0){
-                var category_name = $('.plugins_category- .dataTable').find('tr[data-id='+category_id+']').find('.category_name').text();
-                bootbox.confirm("确定要删除<span class='red'>"+category_name+"</span>分类?", function (result) {
+            if(category.id > 0){
+                bootbox.confirm("确定要删除<span class='red'>"+category.name+"</span>分类?", function (result) {
                     if (result) {
-                        $.fruiter.post('{:U("GoodsCategory/del")}',{id:category_id},function(data){
+                        $.fruiter.post('{:U("GoodsCategory/del")}',{id:category.id},function(data){
                             if(data.code == 1){
-                                $('.plugins_category- table').find('tr[data-id='+category_id+']').remove();
-                                category_id = null;
+                                $('.plugins_category- table').find('tr[data-id='+category.id+']').remove();
+                                category = {};
                                 document.getElementById('form-edit').reset();
                                 Notify(data.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
                             }else{
@@ -216,11 +242,10 @@
         });
     });
 </script>
-<script src="__JS__/jquery.ztree.all-3.5.min.js"></script>
 <script>
 $(function(){
     $('.plugins_category- table').find('.btn-get').click(function(){
-        var tr = $(this).parents('tr');
+        tr = $(this).parents('tr');
         if(!$(tr).hasClass('tr-focus')){
             $(tr).parent().find('.tr-focus').removeClass('tr-focus');
             $(tr).addClass('tr-focus');
@@ -228,21 +253,18 @@ $(function(){
         var form = document.getElementById('form-edit');
         $.fruiter.post("{:U('GoodsCategory/getCategory')}",{id:$(tr).data('id')},function(data){
             if(data){
-                category_id = data.id;
+                category = data;
                 form.name.value = data.name;
-                form.p_id.value = data.pid;
+                form.icon.value = data.icon;
+                $(form.status).removeAttr('checked');
+                if(data.status == 1){
+                    $(form.status).eq(0).attr('checked',true);
+                }else{
+                    $(form.status).eq(1).attr('checked',true);
+                }
                 form.title.value = data.title;
                 form.keywords.value = data.keywords;
                 form.descript.value = data.descript;
-                var nodes = zTree.getNodes();
-                for(var i in nodes){
-                    if(data.pid == 0 || nodes[i].id == data.pid){
-                        nodes[i].checked = 'checked';
-                        zTree.updateNode(nodes[i],false);
-                        form.p_name.value = nodes[i].name;
-                        break;
-                    }
-                }
             }
         });
     });
@@ -254,46 +276,25 @@ $(function(){
             $(tr).parent().find('.tr-focus').removeClass('tr-focus');
             $(tr).addClass('tr-focus');
         }
-        var pid = $(tr).data('pid');
-        var trs = $(tr).parents('tbody').find('tr[data-pid='+pid+']');
-        if(tr.data('id') == $(trs[0]).data('id') && action == 'up' ){
+        var index = tr.index();
+        var trs = $(tr).parents('tbody').find('tr');
+        if(index == 0 && action == 'up' ){
             Notify('无法上移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
-        }else if(tr.data('id') == $(trs[trs.length-1]).data('id') && action == 'down' ){
+        }else if(index == (trs.length-1) && action == 'down' ){
             Notify('无法下移', 'bottom-right', '5000', 'warning', 'fa-warning', true);
         }else{
             $.fruiter.post("{:U('GoodsCategory/move')}",{id:$(tr).data('id'),action:action},function(data){
                 if(data.code == 1){
-                    for(var i in trs){
-                        if($(trs[i]).data('id') == tr.data('id')){
-                            if(action == 'up'){
-                                $('tr[data-path^=' + tr.data('path') + ']').insertBefore($(trs[parseInt(i)-1]));
-                            }else if(action == 'down'){
-                                $('tr[data-path^=' + tr.data('path') + ']').insertAfter($(trs[parseInt(i)+1]));
-                            }
-                            break;
-                        }
+                    if (action == 'up') {
+                        $(tr).insertBefore($(trs[index - 1]));
+                    } else if (action == 'down') {
+                        $(tr).insertAfter($(trs[index + 1]));
                     }
                     Notify(data.msg, 'bottom-right', '5000', 'success', 'fa-check', true);
                 }else{
                     Notify(data.msg, 'bottom-right', '5000', 'danger', 'fa-bolt', true);
                 }
             });
-        }
-    });
-
-    $('.ifold').click(function(){
-        var tr = $(this).parents('tr');
-        var path = tr.data('path');
-        if($(this).hasClass('fa-minus-square-o')){
-            $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
-                if(index) $(this).hide();
-            });
-            $(this).removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-        }else if($(this).hasClass('fa-plus-square-o')){
-            $('.plugins_category- .dataTable').find('tr[data-path^='+path+']').each(function(index){
-                if(index) $(this).show();
-            });
-            $(this).removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
         }
     });
 });

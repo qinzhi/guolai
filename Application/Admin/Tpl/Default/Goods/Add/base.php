@@ -67,32 +67,32 @@
                         <tr>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth150" type="text" name="_goods_no[]" pattern="required" maxlength="20">
+                                    <input class="input-xs Lwidth150" type="text" name="goods_no" pattern="required" maxlength="20">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_cost_price[]" pattern="int" maxlength="10">
+                                    <input class="input-xs Lwidth80" type="text" name="cost_price" pattern="float" maxlength="10">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_store_nums[]" pattern="int" maxlength="10">
+                                    <input class="input-xs Lwidth80" type="text" name="store_nums" pattern="int" maxlength="10">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_weight[]" pattern="float" maxlength="10">
+                                    <input class="input-xs Lwidth80" type="text" name="weight" pattern="float" maxlength="10">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_sort[]" pattern="float" maxlength="10">
+                                    <input class="input-xs Lwidth80" type="text" name="unit" maxlength="10">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group has-feedback no-margin">
-                                    <input class="input-xs Lwidth80" type="text" name="_unit[]" pattern="float" maxlength="10">
+                                    <input class="input-xs Lwidth80" type="text" name="sort" pattern="int" maxlength="5">
                                 </div>
                             </td>
                         </tr>
@@ -111,16 +111,14 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody class="spec-list">
-
-                    </tbody>
+                    <tbody id="rule-list"></tbody>
                 </table>
             </td>
         </tr>
         <tr>
             <th>批发规则：</th>
             <td>
-                <a class="btn btn-success btn-sm pull-left no-radius" href="javascript:void(0);" id="addSpec" data-status="true">
+                <a class="btn btn-success btn-sm pull-left no-radius" href="javascript:void(0);" id="addRule" data-status="true">
                     <i class="fa fa-plus"></i>
                     添加规则
                 </a>
@@ -157,17 +155,17 @@
         </tr>
     </tbody>
 </table>
-<script type="text/html" id="_spec">
+<script type="text/html" id="_rule">
     <tr>
         <td>
             <div class="form-group has-feedback no-margin">
                 <span>≥</span>
-                <input class="input-xs Lwidth80" type="text" name="_goods_no[]" pattern="required" maxlength="20">
+                <input class="input-xs Lwidth80" type="text" name="_num[]" pattern="required" maxlength="20">
             </div>
         </td>
         <td>
             <div class="form-group has-feedback no-margin">
-                <input class="input-xs Lwidth80" type="text" name="_market_price[]" pattern="float" maxlength="10">
+                <input class="input-xs Lwidth80" type="text" name="_price[]" pattern="float" maxlength="10">
             </div>
         </td>
         <td>
@@ -177,15 +175,15 @@
 </script>
 <script>
     $(function(){
-        var specTpl = template('_spec');
-        var specList = $('.spec-list');
-        specList.append(specTpl).find('td:eq(2)').find('a').remove();
-        $('#addSpec').click(function(){
-            if(specList.children().length >= 3){
+        var ruleTpl = template('_rule');
+        var ruleList = $('#rule-list');
+        ruleList.append(ruleTpl).find('td:eq(2)').find('a').remove();
+        $('#addRule').click(function(){
+            if(ruleList.children().length >= 3){
                 Notify('最多添加三条批发规则', 'bottom-right', '5000', 'warning', 'fa-warning', true);
                 return;
             }else
-                specList.append(specTpl).find('tr:last-child').find('a').bind('click',function(){
+                ruleList.append(ruleTpl).find('tr:last-child').find('a').bind('click',function(){
                     var me = $(this).closest('tr');
                     bootbox.confirm("确定要删除么?", function (result) {
                         if(result){

@@ -19,7 +19,7 @@
                                 </ul>
                                 <div class="tab-content tabs-flat">
                                     <div class="tab-pane active" id="tab-basic">
-                                        <table class="table-form col-md-8">
+                                        <table class="table-form col-md-10">
                                             <colgroup>
                                                 <col width="150px">
                                                 <col>

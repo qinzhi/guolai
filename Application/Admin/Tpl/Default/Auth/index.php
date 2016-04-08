@@ -19,9 +19,9 @@
                                 <table class="table table-bordered table-condensed table-middle table-auth_">
                                     <thead class="flip-content bordered-palegreen">
                                     <tr>
-                                        <th width="40%">模块名称</th>
+                                        <th width="35%">模块名称</th>
                                         <th width="40%">地址</th>
-                                        <th width="20%">操作</th>
+                                        <th width="25%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>

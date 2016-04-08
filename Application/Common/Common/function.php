@@ -66,3 +66,7 @@ if(!function_exists('authcode')){
         }
     }
 }
+
+function get_img($img_src){
+    return '/Public/Attachments/' . $img_src;
+}

@@ -45,6 +45,13 @@ $.extend({
                 set_loading('hide');
                 func(result);
             });
+        },
+        get : function(url,data,func){
+            set_loading('show');
+            $.get(url,data,function(result){
+                set_loading('hide');
+                func(result);
+            });
         }
     },
     dialog : function(config){

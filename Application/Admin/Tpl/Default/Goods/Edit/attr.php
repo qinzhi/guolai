@@ -58,7 +58,7 @@
     {{/each}}
 </script>
 <script>
-    var model_id = {$model_id};
+    var model_id = '{$model_id}';
     var goods_attr = {$attr|json_encode};
     (function init_attr(){
         $.post('{:U("GoodsAttr/getModels")}',function(data){

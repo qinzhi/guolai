@@ -11,16 +11,39 @@ use Think\Model;
 
 class GoodsCategoryModel extends CommonModel{
 
-    public static $order = 'sort asc'; //排序
+    public $order = 'sort asc'; //排序
+
+    const TABLE = 'goods_category';
+
+    const SEO_TABLE = 'goods_category_to_seo';
+
+    const FIELD_ID = 'id';
+
+    const FIELD_NAME = 'name';
+
+    const FIELD_ICON = 'icon';
+
+    const FIELD_STATUS = 'status';//状态
+
+    const FIELD_SORT = 'sort';//排序
+
+    const FIELD_IS_DEL = 'is_del';//是否删除
+
+    const STATUS_OPEN = 1;//开启状态
+
+    const STATUS_CLOSE = 0;//关闭状态
+
+    const DEL_YES = '1';//删除
+
+    const DEL_NO = '0';//没删除
 
     public function __construct(){
         parent::__construct();
-        $this->seoTable = 'goods_category_to_seo';
     }
 
     public function move($id,$action){
         $auth = $this->find($id);
-        $authList = $this->get_categories_by_pid($auth['pid']);
+        $authList = $this->getCategories();
         for($i=0,$len=count($authList);$i<$len;$i++){
             if($authList[$i]['id'] == $auth['id']){
                 if($i == 0 && $action == 'up' ){//上移失败
@@ -48,51 +71,13 @@ class GoodsCategoryModel extends CommonModel{
         }
     }
 
-    public function format_tree($AuthLists,$is_json = true,$is_init = true){
-        if($is_init) $tree[] = array('id'=>'','pid'=>0,'level'=>0,'name'=>'根节点');
-        foreach($AuthLists as $auth){
-            if($auth['level'] < 2){
-                $tree[] = array(
-                    'id' => $auth['id'],
-                    'pId' => $auth['pid'],
-                    'name' => $auth['name'],
-                    'level' => $auth['level'],
-                    'open' => true,
-                );
-            }
-        }
-        return $is_json?json_encode($tree):$tree;
-    }
-
     /**
-     * 通过父Id获取单个分类
-     * @param $pid
-     * @param string $sort
-     * @return mixed
+     * 获取分类排序
+     * @return int
      */
-    public function getCategoryByPid($pid,$sort = ''){
-        $sort = $sort ?: $this::$order;
-        return $this->table($this->getTableName() . ' as t')
-                        ->join('left join ' . $this->tablePrefix . $this->seoTable . ' as t1 on t1.category_id=t.id')
-                            ->where(array('pid'=>$pid))
-                                ->order($sort)->find();
-    }
-
-    /**
-     * 通过父Id获取子分类
-     * @param $pid
-     * @return mixed
-     */
-    public function getCategoriesByPid($pid){
-        return $this->where(array('pid'=>$pid))->order($this::$order)->select();
-    }
-
-    /**
-     * 获取所有分类
-     * @return mixed
-     */
-    public function getCategories(){
-        return $this->order($this::$order)->select();
+    public function getCategorySort(){
+        $category = $this->order('sort desc')->find();
+        return !empty($category) ? ($category['sort'] + 1) : 0;
     }
 
     /**
@@ -107,7 +92,7 @@ class GoodsCategoryModel extends CommonModel{
             return $insert_id;
         }else{
             $seo['category_id'] = $insert_id;
-            M($this->seoTable)->add($seo);
+            M(self::SEO_TABLE)->add($seo);
             return true;
         }
     }
@@ -124,7 +109,7 @@ class GoodsCategoryModel extends CommonModel{
         if($result === false){
             return $result;
         }else{
-            M($this->seoTable)->where(array('category_id'=>$id))->save($seo);
+            M(self::SEO_TABLE)->where(array('category_id'=>$id))->save($seo);
             return true;
         }
     }
@@ -135,10 +120,14 @@ class GoodsCategoryModel extends CommonModel{
      * @return mixed
      */
     public function getCategoryById($id){
-        return $this->table($this->getTableName() . ' as t')
-                        ->join('left join ' . $this->tablePrefix . $this->seoTable . ' as t1 on t1.category_id=t.id')
+        return $this->alias('t')
+                        ->join('left join ' . $this->tablePrefix . self::SEO_TABLE . ' as t1 on t1.category_id=t.id')
                             ->where(array('t.id'=>$id))
-                                ->order($this::$order)->find();
+                                ->order($this->order)->find();
+    }
+
+    public function setOrder($order){
+        $this->order = $order;
     }
 
     /**
@@ -147,6 +136,53 @@ class GoodsCategoryModel extends CommonModel{
      * @return bool
      */
     public function delCategoryById($id){
-        return $this->where('id=',$id)->save(array('is_del'=>1));
+        return $this->where(array(
+            self::FIELD_ID => $id,
+            self::FIELD_IS_DEL => self::DEL_YES
+        ));
+    }
+
+    /**
+     * 获取所有分类
+     * @return mixed
+     */
+    public function getCategories(){
+        $where = array(
+            self::FIELD_IS_DEL=>self::DEL_NO
+        );
+        return $this->_get($where);
+    }
+
+    /**
+     * 获取所有开启状态的分类
+     * @return mixed
+     */
+    public function getCategoriesOnOpen(){
+        $where = array(
+            self::FIELD_STATUS=>self::STATUS_OPEN,
+            self::FIELD_IS_DEL=>self::DEL_NO
+        );
+        return $this->_get($where);
+    }
+
+    /**
+     * 获取所有关闭状态的分类
+     * @return mixed
+     */
+    public function getCategoriesOnClose(){
+        $where = array(
+            self::FIELD_STATUS=>self::STATUS_CLOSE,
+            self::FIELD_IS_DEL=>self::DEL_NO
+        );
+        return $this->_get($where);
+    }
+
+    private function _get($where){
+        $categories = $this->where($where)
+            ->order($this->order)->select();
+        foreach ($categories as &$category){
+            $category['icon'] = get_img($category['icon']);
+        }
+        return $categories;
     }
 }

@@ -10,10 +10,11 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-04-04 22:34:22
+Date: 2016-04-08 17:52:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for `guolai_admin`
 -- ----------------------------
@@ -145,7 +146,7 @@ CREATE TABLE `guolai_attr` (
   PRIMARY KEY (`id`),
   KEY `model_id` (`model_id`) USING BTREE,
   CONSTRAINT `guolai_attr_ibfk_1` FOREIGN KEY (`model_id`) REFERENCES `guolai_model` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='属性表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='属性表';
 
 -- ----------------------------
 -- Records of guolai_attr
@@ -244,8 +245,11 @@ DROP TABLE IF EXISTS `guolai_goods`;
 CREATE TABLE `guolai_goods` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
   `name` varchar(50) NOT NULL COMMENT '商品名称',
+  `intro` varchar(126) DEFAULT NULL,
   `goods_no` varchar(20) NOT NULL COMMENT '商品货号',
-  `model_id` int(10) NOT NULL DEFAULT '0' COMMENT '模型ID',
+  `category_id` int(10) DEFAULT NULL,
+  `model_id` mediumint(8) DEFAULT NULL,
+  `search_words` varchar(50) DEFAULT NULL COMMENT '商品搜索词库,逗号分隔',
   `sell_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '销售价格',
   `cost_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '成本价格',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '商品状态 0下架 1上架',
@@ -254,7 +258,6 @@ CREATE TABLE `guolai_goods` (
   `update_time` int(10) NOT NULL COMMENT '最后一次修改时间',
   `create_time` int(10) NOT NULL COMMENT '创建时间',
   `store_nums` int(10) NOT NULL DEFAULT '0' COMMENT '库存',
-  `search_words` varchar(50) DEFAULT NULL COMMENT '商品搜索词库,逗号分隔',
   `weight` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '重量',
   `unit` varchar(6) DEFAULT NULL COMMENT '计量单位',
   `visit` int(10) NOT NULL DEFAULT '0' COMMENT '浏览次数',
@@ -265,12 +268,14 @@ CREATE TABLE `guolai_goods` (
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除 0正常 1已删除',
   PRIMARY KEY (`id`),
   KEY `is_del` (`is_del`),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `category_id` (`category_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_goods
 -- ----------------------------
+INSERT INTO `guolai_goods` VALUES ('1', '烟台栖霞苹果新鲜水果产地直供', null, '1', '2', '0', '苹果', '60.00', '20.00', '1', null, null, '1460108216', '1460105337', '2000', '15.00', '箱', '0', '0', '0', null, '0', '0');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_category`
@@ -278,18 +283,21 @@ CREATE TABLE `guolai_goods` (
 DROP TABLE IF EXISTS `guolai_goods_category`;
 CREATE TABLE `guolai_goods_category` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '分类ID',
-  `pid` int(10) NOT NULL COMMENT '父分类ID',
   `name` varchar(50) NOT NULL COMMENT '分类名称',
-  `level` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(255) NOT NULL COMMENT '分类图标',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '开启状态 1.开启 0.关闭',
   `sort` smallint(5) NOT NULL DEFAULT '0' COMMENT '排序',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 1删除 0 没删除',
-  PRIMARY KEY (`id`),
-  KEY `parent_id` (`pid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='产品分类表';
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='产品分类表';
 
 -- ----------------------------
 -- Records of guolai_goods_category
 -- ----------------------------
+INSERT INTO `guolai_goods_category` VALUES ('1', '火龙果', 'images/pitaya.png', '1', '0', '0');
+INSERT INTO `guolai_goods_category` VALUES ('2', '苹果', 'images/apple.png', '1', '1', '0');
+INSERT INTO `guolai_goods_category` VALUES ('3', '小番茄', 'images/inmato.png', '1', '2', '0');
+INSERT INTO `guolai_goods_category` VALUES ('4', '红枣', 'images/reddates.png', '1', '3', '0');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_category_to_seo`
@@ -304,11 +312,15 @@ CREATE TABLE `guolai_goods_category_to_seo` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `category_id` (`category_id`) USING BTREE,
   CONSTRAINT `guolai_goods_category_to_seo_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `guolai_goods_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='产品分类SEO表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='产品分类SEO表';
 
 -- ----------------------------
 -- Records of guolai_goods_category_to_seo
 -- ----------------------------
+INSERT INTO `guolai_goods_category_to_seo` VALUES ('1', '1', '火龙果', '火龙果', '');
+INSERT INTO `guolai_goods_category_to_seo` VALUES ('2', '2', '苹果', '苹果', '');
+INSERT INTO `guolai_goods_category_to_seo` VALUES ('3', '3', '小番茄', '小番茄', '');
+INSERT INTO `guolai_goods_category_to_seo` VALUES ('4', '4', '红枣', '红枣', '');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_to_attr`
@@ -332,25 +344,6 @@ CREATE TABLE `guolai_goods_to_attr` (
 
 -- ----------------------------
 -- Records of guolai_goods_to_attr
--- ----------------------------
-
--- ----------------------------
--- Table structure for `guolai_goods_to_category`
--- ----------------------------
-DROP TABLE IF EXISTS `guolai_goods_to_category`;
-CREATE TABLE `guolai_goods_to_category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category_id` int(11) NOT NULL COMMENT '分类ID',
-  `goods_id` int(11) NOT NULL COMMENT '商品ID',
-  PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`) USING BTREE,
-  KEY `goods_id` (`goods_id`) USING BTREE,
-  CONSTRAINT `guolai_goods_to_category_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `guolai_goods_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `guolai_goods_to_category_ibfk_2` FOREIGN KEY (`goods_id`) REFERENCES `guolai_goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类关联表';
-
--- ----------------------------
--- Records of guolai_goods_to_category
 -- ----------------------------
 
 -- ----------------------------
@@ -382,11 +375,12 @@ CREATE TABLE `guolai_goods_to_detail` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `goods_id` (`goods_id`) USING BTREE,
   CONSTRAINT `guolai_goods_to_detail_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `guolai_goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品详情表';
 
 -- ----------------------------
 -- Records of guolai_goods_to_detail
 -- ----------------------------
+INSERT INTO `guolai_goods_to_detail` VALUES ('1', '1', '');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_to_price`
@@ -397,12 +391,15 @@ CREATE TABLE `guolai_goods_to_price` (
   `goods_id` int(11) NOT NULL,
   `num` smallint(5) NOT NULL DEFAULT '1' COMMENT '批发大于数量',
   `price` double(8,2) NOT NULL COMMENT '发批价格',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `goods_id` (`goods_id`),
+  CONSTRAINT `guolai_goods_to_price_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `guolai_goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_goods_to_price
 -- ----------------------------
+INSERT INTO `guolai_goods_to_price` VALUES ('3', '1', '1', '60.00');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_to_seo`
@@ -421,6 +418,7 @@ CREATE TABLE `guolai_goods_to_seo` (
 -- ----------------------------
 -- Records of guolai_goods_to_seo
 -- ----------------------------
+INSERT INTO `guolai_goods_to_seo` VALUES ('0', '1', '', '');
 
 -- ----------------------------
 -- Table structure for `guolai_model`
@@ -431,7 +429,7 @@ CREATE TABLE `guolai_model` (
   `name` varchar(20) NOT NULL COMMENT '模型名称',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除 0正常 1已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品模型表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品模型表';
 
 -- ----------------------------
 -- Records of guolai_model
@@ -448,10 +446,10 @@ CREATE TABLE `guolai_session` (
   `session_data` mediumblob,
   PRIMARY KEY (`id`,`session_id`),
   UNIQUE KEY `session_id` (`session_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=1285 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1629 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_session
 -- ----------------------------
-INSERT INTO `guolai_session` VALUES ('1281', '5nqjivudi1t6nd7jqdscbovi84', '1459678019', 0x61646D696E5F7C613A313A7B733A393A225F61646D696E5F6964223B733A313A2231223B7D);
-INSERT INTO `guolai_session` VALUES ('1284', 'eho5nm6j82jth7tpboph05fno6', '1459679315', 0x61646D696E5F7C613A313A7B733A393A225F61646D696E5F6964223B733A313A2231223B7D);
+INSERT INTO `guolai_session` VALUES ('1628', 'r4j9ccjbsolkivssdoh4s58d46', '1460110472', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);
+INSERT INTO `guolai_session` VALUES ('1609', 'jau6p2tdsf1jfatpdk4q8b8hf4', '1460109656', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);

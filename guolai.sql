@@ -10,11 +10,10 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-04-08 17:52:25
+Date: 2016-04-10 21:50:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-
 -- ----------------------------
 -- Table structure for `guolai_admin`
 -- ----------------------------
@@ -166,7 +165,7 @@ CREATE TABLE `guolai_auth_role` (
   `sort` mediumint(5) NOT NULL COMMENT '排序',
   `level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '级别: 0.根节点 1.二级节点 2.叶节点',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_auth_role
@@ -188,6 +187,9 @@ INSERT INTO `guolai_auth_role` VALUES ('15', '11', 'Admin', '1', '编辑文章',
 INSERT INTO `guolai_auth_role` VALUES ('16', '0', 'Admin', '2', '广告管理', 'Banner', '2', '0');
 INSERT INTO `guolai_auth_role` VALUES ('17', '16', 'Admin', '2', '广告位列表', 'Banner/position', '0', '1');
 INSERT INTO `guolai_auth_role` VALUES ('18', '16', 'Admin', '2', '广告列表', 'Banner/index', '1', '1');
+INSERT INTO `guolai_auth_role` VALUES ('19', '16', 'Admin', '1', '广告位编辑', 'Banner/position_edit', '2', '1');
+INSERT INTO `guolai_auth_role` VALUES ('20', '16', 'Admin', '1', '添加广告位', 'Banner/position_add', '3', '1');
+INSERT INTO `guolai_auth_role` VALUES ('21', '16', 'Admin', '1', '添加广告', 'Banner/add', '4', '1');
 
 -- ----------------------------
 -- Table structure for `guolai_banner`
@@ -236,7 +238,7 @@ CREATE TABLE `guolai_banner_position` (
 -- ----------------------------
 -- Records of guolai_banner_position
 -- ----------------------------
-INSERT INTO `guolai_banner_position` VALUES ('1', '首页Banner', '', '0', '0', '1455781850', '0', '1', '0');
+INSERT INTO `guolai_banner_position` VALUES ('1', '首页Banner', '', '640', '320', '1460273089', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for `guolai_goods`
@@ -446,10 +448,9 @@ CREATE TABLE `guolai_session` (
   `session_data` mediumblob,
   PRIMARY KEY (`id`,`session_id`),
   UNIQUE KEY `session_id` (`session_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=1629 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1805 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_session
 -- ----------------------------
-INSERT INTO `guolai_session` VALUES ('1628', 'r4j9ccjbsolkivssdoh4s58d46', '1460110472', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);
-INSERT INTO `guolai_session` VALUES ('1609', 'jau6p2tdsf1jfatpdk4q8b8hf4', '1460109656', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);
+INSERT INTO `guolai_session` VALUES ('1804', '9o60bvfs4haqphrf0b4almb9q0', '1460291658', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);

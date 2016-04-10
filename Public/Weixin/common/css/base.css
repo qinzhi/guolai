@@ -399,7 +399,8 @@ article,aside,details,dialog,figcaption,figure,footer,header,hgroup,nav,section,
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;
+    width: 100%;
+    z-index: 1;
 }
 .footer .flex_card{
     display: -webkit-box;

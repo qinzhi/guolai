@@ -153,6 +153,14 @@
                 </div>
             </td>
         </tr>
+        <tr>
+            <th>商品图片：</th>
+            <td>
+                <ul class="cover-box">
+                    <li class="last"></li>
+                </ul>
+            </td>
+        </tr>
     </tbody>
 </table>
 <script type="text/html" id="_rule">

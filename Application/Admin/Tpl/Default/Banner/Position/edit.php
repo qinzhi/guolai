@@ -5,7 +5,7 @@
             <div class="widget flat no-margin">
                 <div class="widget-header widget-fruiter">
                     <div class="pull-right">
-                        <a class="btn btn-success" id="position_save" href="javascript:void(0);">确定添加</a>
+                        <a class="btn btn-success" id="position_save" href="javascript:void(0);">确定</a>
                     </div>
                 </div><!--Widget Header-->
                 <div class="widget-body plugins_goods-">

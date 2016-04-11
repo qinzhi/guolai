@@ -157,13 +157,21 @@
             <th>商品图片：</th>
             <td>
                 <ul class="cover-box">
-                    <li class="last"></li>
+                    <li class="last" id="add-image"></li>
                 </ul>
             </td>
         </tr>
     </tbody>
 </table>
-<script type="text/html" id="_rule">
+<script type="text/html" id="coverTpl">
+    <li class="goods-img">
+        <img src="{{img}}"/>
+        <i class="delete glyphicon glyphicon-remove"></i>
+        <p class="set-cover">设为封面图</p>
+        <input type="hidden" name="image[]" value="{{image}}"/>
+    </li>
+</script>
+<script type="text/html" id="ruleTpl">
     <tr>
         <td>
             <div class="form-group has-feedback no-margin">
@@ -183,7 +191,7 @@
 </script>
 <script>
     $(function(){
-        var ruleTpl = template('_rule');
+        var ruleTpl = template('ruleTpl');
         var ruleList = $('#rule-list');
         ruleList.append(ruleTpl).find('td:eq(2)').find('a').remove();
         $('#addRule').click(function(){
@@ -199,6 +207,33 @@
                         }
                     });
                 });
+        });
+        $('#add-image').click(function(){
+            var me = $(this);
+            var ul = $(this).parent();
+            var li = ul.find('li');
+            BrowseServer('',function(fileUrl,saveUrl){
+                var coverTpl = template('coverTpl',{img:fileUrl,image:saveUrl});
+                me.before(coverTpl).prev();
+                me.prev().find('.delete').click(function(){
+                    var li = $(this).closest('li');
+                    bootbox.confirm("确定要删除吗?", function (result) {
+                        if (result) {
+                            li.remove();
+                            Notify('删除成功', 'bottom-right', '5000', 'success', 'fa-check', true);
+                        }
+                    });
+                });
+                me.prev().find('.set-cover').click(function(){
+                    var li = $(this).closest('li');
+                    if(li.find('#cover-index').length <= 0){
+                        ul.find('#cover-index').remove();
+                        li.append('<input type="hidden" name="cover_index" value="' + $(this).index() + '"/>');
+                        $(this).text('默认图片');
+                        Notify('设置成功', 'bottom-right', '5000', 'success', 'fa-check', true);
+                    }
+                });
+            });
         });
     });
 </script>

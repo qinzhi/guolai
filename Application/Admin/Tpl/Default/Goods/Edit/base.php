@@ -155,7 +155,7 @@
         </tr>
     </tbody>
 </table>
-<script type="text/html" id="_rule">
+<script type="text/html" id="ruleTpl">
     <tr>
         <td>
             <div class="form-group has-feedback no-margin">
@@ -175,15 +175,15 @@
 </script>
 <script>
     $(function(){
-        var ruleList = $('#rule-list');
+       ruleList = $('#rule-list');
         var rules = {$rules|json_encode};
         for(var i in rules){
-            var ruleTpl = template('_rule',{num:rules[i].num,price:rules[i].price});
+            var ruleTpl = template('ruleTpl',{num:rules[i].num,price:rules[i].price});
             ruleList.append(ruleTpl);
             if(!i)ruleList.find('td:eq(2)').find('a').remove();
         }
         $('#addRule').click(function(){
-            var ruleTpl = template('_rule');
+            var ruleTpl = template('ruleTpl');
             if(ruleList.children().length >= 3){
                 Notify('最多添加三条批发规则', 'bottom-right', '5000', 'warning', 'fa-warning', true);
             }else

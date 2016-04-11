@@ -17,11 +17,12 @@ function SetFileField( fileUrl , data )
 {
     split = '\/Attachments\/';
     pic = fileUrl.split(split);
-    if(!!pic[1]){
-        document.getElementById( (data["selectActionData"] )).value = pic[1];
+    var selectActionData = document.getElementById( (data["selectActionData"] ));
+    if(!!pic[1] && selectActionData){
+        selectActionData.value = pic[1];
     }
     if($.isFunction(window.fun)){
-        window.fun(fileUrl);
+        window.fun(fileUrl,pic[1]);
     }
 }
 function create_category_panel(){

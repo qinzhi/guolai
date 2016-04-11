@@ -64,7 +64,7 @@ ATTENTION: The trailing slash is required.
 */
 $base_url = 'http://' . $_SERVER['HTTP_HOST'];
 
-$ckfinder_url = '/Public/Admin/Attachments/';
+$ckfinder_url = '/Public/Attachments/';
 
 $baseUrl = $base_url  . $ckfinder_url;
 

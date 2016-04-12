@@ -167,8 +167,13 @@
     <li class="goods-img">
         <img src="{{img}}"/>
         <i class="delete glyphicon glyphicon-remove"></i>
-        <p class="set-cover">设为封面图</p>
         <input type="hidden" name="image[]" value="{{image}}"/>
+        {{if (index != 1)}}
+            <p class="set-cover">设为封面图</p>
+        {{else}}
+            <input type="hidden" id="cover-index" name="cover_index" value="{{index -1}}"/>
+            <p class="set-cover active">封面图片</p>
+        {{/if}}
     </li>
 </script>
 <script type="text/html" id="ruleTpl">
@@ -213,12 +218,18 @@
             var ul = $(this).parent();
             var li = ul.find('li');
             BrowseServer('',function(fileUrl,saveUrl){
-                var coverTpl = template('coverTpl',{img:fileUrl,image:saveUrl});
-                me.before(coverTpl).prev();
-                me.prev().find('.delete').click(function(){
+                var coverTpl = template('coverTpl',{img:fileUrl,image:saveUrl,index:li.length});
+                me.before(coverTpl).prev().find('.delete').click(function(){
                     var li = $(this).closest('li');
                     bootbox.confirm("确定要删除吗?", function (result) {
                         if (result) {
+                            if(li.find('#cover-index').length > 0){
+                                var first_li = ul.find('li.goods-img:eq(0)');
+                                if(first_li.length){
+                                    first_li.append('<input type="hidden" id="cover-index" name="cover_index" value="0"/>');
+                                    first_li.find('.set-cover').text('封面图片').addClass('active');
+                                }
+                            }
                             li.remove();
                             Notify('删除成功', 'bottom-right', '5000', 'success', 'fa-check', true);
                         }
@@ -227,9 +238,12 @@
                 me.prev().find('.set-cover').click(function(){
                     var li = $(this).closest('li');
                     if(li.find('#cover-index').length <= 0){
+                        var cover_li = ul.find('#cover-index').closest('li');
+                        cover_li.find('.set-cover').text('设为封面图').removeClass('active');
                         ul.find('#cover-index').remove();
-                        li.append('<input type="hidden" name="cover_index" value="' + $(this).index() + '"/>');
-                        $(this).text('默认图片');
+
+                        li.append('<input type="hidden" id="cover-index" name="cover_index" value="' + $(this).index() + '"/>');
+                        $(this).text('封面图片').addClass('active');
                         Notify('设置成功', 'bottom-right', '5000', 'success', 'fa-check', true);
                     }
                 });

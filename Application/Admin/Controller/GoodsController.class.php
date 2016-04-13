@@ -39,9 +39,18 @@ class GoodsController extends AdminController {
             $this->goodsModel->editGoodsById(I('post.'),$id);
             $this->redirect('Goods/index');
         }else{
+            //商品基本信息
             $goods = $this->goodsModel->getGoodsById($id);
             $this->assign('goods',$goods);
 
+            //商品图片
+            $images = $this->goodsModel->getGoodsImageById($id);
+            foreach ($images as &$val){
+                $val['imageUrl'] = get_img($val['image']);
+            }
+            $this->assign('images',$images);
+
+            //商品价格规则
             $rules = $this->goodsModel->getGoodsPriceById($id);
             $this->assign('rules',$rules);
 
@@ -58,6 +67,7 @@ class GoodsController extends AdminController {
             $this->assign('model_id',key($attr));//商品模型id
             $this->assign('attr',current($attr));
 
+            //分类
             $categories = D('GoodsCategory')->getCategories();
             foreach ($categories as &$category){
                 unset($category['icon']);
@@ -101,7 +111,7 @@ class GoodsController extends AdminController {
 
     public function __call($function,$args)
     {
-        if ($function === 'spec') {
+        if ($function === 'spec') { 
             $tpl = I('request.tpl');
             if ($tpl == 'select') {
                 $has_id = I('request.has_id');

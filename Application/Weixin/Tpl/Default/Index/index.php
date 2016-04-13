@@ -10,12 +10,12 @@
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <a href="javascript:;">
-                <img src="http://image.joyvioshop.com/img_upload/160302/0_1456904438_80341976.jpg"/>
+                <img src="http://image.joyvioshop.com/img_upload/160302/0_1456904385_1761486977.jpg"/>
             </a>
         </div>
         <div class="swiper-slide">
             <a href="javascript:;">
-                <img src="http://image.joyvioshop.com/img_upload/160302/0_1456904344_933058433.jpg"/>
+                <img src="http://image.joyvioshop.com/img_upload/160302/0_1456904438_80341976.jpg"/>
             </a>
         </div>
     </div>

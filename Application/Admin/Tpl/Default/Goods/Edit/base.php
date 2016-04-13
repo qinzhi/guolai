@@ -153,8 +153,29 @@
                 </div>
             </td>
         </tr>
+        <tr>
+            <th>商品图片：</th>
+            <td>
+                <ul class="cover-box">
+                    <li class="last" id="add-image"></li>
+                </ul>
+            </td>
+        </tr>
     </tbody>
 </table>
+<script type="text/html" id="coverTpl">
+    <li class="goods-img">
+        <img src="{{img}}"/>
+        <i class="delete glyphicon glyphicon-remove"></i>
+        <input type="hidden" name="image[]" value="{{image}}"/>
+        {{if (index > 0)}}
+            <p class="set-cover">设为封面图</p>
+        {{else}}
+            <input type="hidden" id="cover-index" name="cover_index" value="{{index}}"/>
+            <p class="set-cover active">封面图片</p>
+        {{/if}}
+    </li>
+</script>
 <script type="text/html" id="ruleTpl">
     <tr>
         <td>
@@ -175,12 +196,15 @@
 </script>
 <script>
     $(function(){
-       ruleList = $('#rule-list');
+        new GoodsImage({
+            data: {$images|json_encode}
+        });
+        var ruleList = $('#rule-list');
         var rules = {$rules|json_encode};
         for(var i in rules){
             var ruleTpl = template('ruleTpl',{num:rules[i].num,price:rules[i].price});
             ruleList.append(ruleTpl);
-            if(!i)ruleList.find('td:eq(2)').find('a').remove();
+            if(i == 0)ruleList.find('td:eq(2)').html('');
         }
         $('#addRule').click(function(){
             var ruleTpl = template('ruleTpl');

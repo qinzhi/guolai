@@ -49,6 +49,10 @@ class GoodsModel extends CommonModel{
         $_num = $params['_num'];
         $_price = $params['_price'];
         $price = current($_price);
+        $image = $params['image'];
+        $cover_index = intval($params['cover_index']);
+        $cover_index = ($cover_index > 0 && $cover_index < count($image)) ? $cover_index : 0;
+        $cover_image = !empty($image[$cover_index]) ? $image[$cover_index] : '';//封面图片
 
         $goods = array(
             'name' => $params['name'],
@@ -56,6 +60,7 @@ class GoodsModel extends CommonModel{
             'goods_no' => $params['goods_no'],
             'model_id' => $params['model_id'],
             'category_id' => (int)$params['category_id'],
+            'cover_image' => $cover_image,
             'search_words' => $params['search_words'],
             'cost_price' => $params['cost_price'],
             'sell_price' => $price,
@@ -67,7 +72,6 @@ class GoodsModel extends CommonModel{
             'create_time' => time(),
             'update_time' => time()
         );
-
         $goods_id = $this->add($goods);//添加商品
         if($goods_id > 0){
             /** --------   添加商品批发价格规则   --------- **/
@@ -78,6 +82,16 @@ class GoodsModel extends CommonModel{
                     'price' => $_price[$i]
                 );
                 M('GoodsToPrice')->add($rule);
+            }
+
+            /** --------   添加商品图片   --------- **/
+            for ($i=0;$i<count($image);$i++){
+                $image = array(
+                    'goods_id' => $goods_id,
+                    'image' => $image[$i],
+                    'is_default' => $cover_index == $i ? 1 : 0,
+                );
+                M('GoodsToImage')->add($image);
             }
 
             /** --------   添加商品详情   --------- **/
@@ -128,6 +142,10 @@ class GoodsModel extends CommonModel{
         $_num = $params['_num'];
         $_price = $params['_price'];
         $price = current($_price);
+        $image = $params['image'];
+        $cover_index = intval($params['cover_index']);
+        $cover_index = ($cover_index > 0 && $cover_index < count($image)) ? $cover_index : 0;
+        $cover_image = !empty($image[$cover_index]) ? $image[$cover_index] : '';//封面图片
 
         $goods = array(
             'id' => $goods_id,
@@ -136,6 +154,7 @@ class GoodsModel extends CommonModel{
             'goods_no' => $params['goods_no'],
             'model_id' => $params['model_id'],
             'category_id' => (int)$params['category_id'],
+            'cover_image' => $cover_image,
             'search_words' => $params['search_words'],
             'cost_price' => $params['cost_price'],
             'sell_price' => $price,
@@ -146,6 +165,7 @@ class GoodsModel extends CommonModel{
             'status' => (int)$params['status'],
             'update_time' => time()
         );
+
         if($this->save($goods)){//更新商品
 
             $where['goods_id'] = $goods_id;
@@ -159,6 +179,17 @@ class GoodsModel extends CommonModel{
                     'price' => $_price[$i]
                 );
                 M('GoodsToPrice')->add($rule);
+            }
+
+            /** --------   添加商品图片   --------- **/
+            M('GoodsToImage')->where($where)->delete();
+            for ($i=0;$i<count($image);$i++){
+                $imageData = array(
+                    'goods_id' => $goods_id,
+                    'image' => $image[$i],
+                    'is_default' => $cover_index == $i ? 1 : 0,
+                );
+                M('GoodsToImage')->add($imageData);
             }
 
             /** --------   更新商品详情   --------- **/
@@ -246,6 +277,15 @@ class GoodsModel extends CommonModel{
      */
     public function getGoodsPriceById($goods_id){
         return M('GoodsToPrice')->where('goods_id='.$goods_id)->select();
+    }
+
+    /**
+     * 获取单个商品图片
+     * @param $goods_id
+     * @return mixed
+     */
+    public function getGoodsImageById($goods_id){
+        return M('GoodsToImage')->where('goods_id='.$goods_id)->select();
     }
 
     /**

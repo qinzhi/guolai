@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-04-13 18:09:29
+Date: 2016-04-14 19:02:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -166,7 +166,7 @@ CREATE TABLE `guolai_auth_role` (
   `sort` mediumint(5) NOT NULL COMMENT '排序',
   `level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '级别: 0.根节点 1.二级节点 2.叶节点',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_auth_role
@@ -191,6 +191,7 @@ INSERT INTO `guolai_auth_role` VALUES ('18', '16', 'Admin', '2', '广告列表',
 INSERT INTO `guolai_auth_role` VALUES ('19', '16', 'Admin', '1', '广告位编辑', 'Banner/position_edit', '2', '1');
 INSERT INTO `guolai_auth_role` VALUES ('20', '16', 'Admin', '1', '添加广告位', 'Banner/position_add', '3', '1');
 INSERT INTO `guolai_auth_role` VALUES ('21', '16', 'Admin', '1', '添加广告', 'Banner/add', '4', '1');
+INSERT INTO `guolai_auth_role` VALUES ('22', '16', 'Admin', '1', '编辑广告', 'Banner/edit', '5', '1');
 
 -- ----------------------------
 -- Table structure for `guolai_banner`
@@ -203,19 +204,21 @@ CREATE TABLE `guolai_banner` (
   `intro` varchar(120) DEFAULT NULL COMMENT '广告简述',
   `image` varchar(255) NOT NULL COMMENT '广告图片',
   `link` varchar(255) DEFAULT NULL COMMENT '链接地址',
-  `start_time` date DEFAULT NULL COMMENT '开始时间',
-  `end_time` date DEFAULT NULL COMMENT '结束时间',
+  `start_time` int(10) DEFAULT NULL COMMENT '开始时间',
+  `end_time` int(10) DEFAULT NULL COMMENT '结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '开启状态 1.开启 0.关闭',
   `sort` mediumint(5) NOT NULL DEFAULT '0' COMMENT '排序',
   `create_time` int(10) NOT NULL COMMENT '添加时间',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除 0正常 1已删除',
   PRIMARY KEY (`id`),
   KEY `position_id` (`position_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='广告';
 
 -- ----------------------------
 -- Records of guolai_banner
 -- ----------------------------
+INSERT INTO `guolai_banner` VALUES ('1', '1', '沃琳蓝莓果酱', '', 'images/banner/banner-1.jpg', '/', '1460563200', '1461945600', '1', '0', '1460631071', '0');
+INSERT INTO `guolai_banner` VALUES ('2', '1', '沃琳金艳猕猴桃酒单支', '', 'images/banner/banner-2.jpg', '/', '1460563200', '1461945600', '1', '0', '1460631326', '0');
 
 -- ----------------------------
 -- Table structure for `guolai_banner_position`
@@ -279,7 +282,7 @@ CREATE TABLE `guolai_goods` (
 -- ----------------------------
 -- Records of guolai_goods
 -- ----------------------------
-INSERT INTO `guolai_goods` VALUES ('1', '烟台栖霞苹果新鲜水果产地直供', null, '1', '2', '0', '苹果', 'images/apple.png', '60.00', '20.00', '1', null, null, '1460540679', '1460105337', '2000', '15.00', '箱', '0', '0', '0', null, '0', '0');
+INSERT INTO `guolai_goods` VALUES ('1', '烟台栖霞苹果新鲜水果产地直供', null, '1', '2', '0', '苹果', 'images/apple.png', '60.00', '20.00', '1', null, null, '1460606060', '1460105337', '2000', '15.00', '箱', '0', '0', '0', null, '0', '0');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_category`
@@ -398,13 +401,12 @@ CREATE TABLE `guolai_goods_to_image` (
   PRIMARY KEY (`id`),
   KEY `goods_id` (`goods_id`),
   CONSTRAINT `guolai_goods_to_image_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `guolai_goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='商品图片表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='商品图片表';
 
 -- ----------------------------
 -- Records of guolai_goods_to_image
 -- ----------------------------
-INSERT INTO `guolai_goods_to_image` VALUES ('4', '1', 'images/apple.png', '1');
-INSERT INTO `guolai_goods_to_image` VALUES ('5', '1', 'images/inmato.png', '0');
+INSERT INTO `guolai_goods_to_image` VALUES ('6', '1', 'images/apple.png', '1');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_to_price`
@@ -418,12 +420,12 @@ CREATE TABLE `guolai_goods_to_price` (
   PRIMARY KEY (`id`),
   KEY `goods_id` (`goods_id`),
   CONSTRAINT `guolai_goods_to_price_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `guolai_goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_goods_to_price
 -- ----------------------------
-INSERT INTO `guolai_goods_to_price` VALUES ('15', '1', '1', '60.00');
+INSERT INTO `guolai_goods_to_price` VALUES ('16', '1', '1', '60.00');
 
 -- ----------------------------
 -- Table structure for `guolai_goods_to_seo`
@@ -470,10 +472,10 @@ CREATE TABLE `guolai_session` (
   `session_data` mediumblob,
   PRIMARY KEY (`id`,`session_id`),
   UNIQUE KEY `session_id` (`session_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=2014 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2114 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_session
 -- ----------------------------
-INSERT INTO `guolai_session` VALUES ('2013', 'bd3f83h8uo4rl1nnqcvf9m6200', '1460542962', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);
-INSERT INTO `guolai_session` VALUES ('1996', 'ij8ghbv490o0g2kkvlul8vm3i6', '1460541883', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);
+INSERT INTO `guolai_session` VALUES ('2113', '754mstrfp57o7n78nplm74jgc2', '1460633161', '');
+INSERT INTO `guolai_session` VALUES ('2109', 'ds1cf459odl1j3t8t0ipuv7md1', '1460633142', 0x61646D696E5F7C613A313A7B733A333A225F6964223B733A313A2231223B7D);

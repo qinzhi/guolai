@@ -16,52 +16,53 @@
                     <table class="table table-hover table-middle">
                         <colgroup>
                             <col width="60px">
-                            <col width="430px">
+                            <col width="350px">
                             <col width="150px">
-                            <col width="130px">
+                            <col width="100px">
                             <col width="200px">
-                            <col width="130px">
-                            <col>
+                            <col width="100px">
+                            <col width="160px">
                         </colgroup>
                         <thead class="bordered-success">
-                        <tr role="row">
-                            <th class="padding-left-16">选择</th>
-                            <th>名称</th>
-                            <th>广告位</th>
-                            <th>排序</th>
-                            <th>开始时间 ～ 结束时间</th>
-                            <th>开启状态</th>
-                            <th>操作</th>
-                        </tr>
+                            <tr role="row">
+                                <th class="padding-left-16">选择</th>
+                                <th>名称</th>
+                                <th>广告位</th>
+                                <th>排序</th>
+                                <th>开始时间 ～ 结束时间</th>
+                                <th>开启状态</th>
+                                <th>操作</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <volist name="banner" id="vo">
-                            <tr>
-                                <td class="padding-left-16">
-                                    <div class="checkbox checkbox-inline no-margin no-padding">
-                                        <label class="no-padding">
-                                            <input type="checkbox" class="banner_id" name="id[]" value="{$vo.id}" autocomplete="off">
-                                            <span class="text"></span>
+                            <volist name="banner" id="vo">
+                                <tr>
+                                    <td class="padding-left-16">
+                                        <div class="checkbox checkbox-inline no-margin no-padding">
+                                            <label class="no-padding">
+                                                <input type="checkbox" class="banner_id" name="id[]" value="{$vo.id}" autocomplete="off">
+                                                <span class="text"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="input-edit" data-field="name" title="点击更新名称">{$vo.name}</td>
+                                    <td>{$vo.position_name}</td>
+                                    <td class="input-edit" data-field="sort" title="点击更新排序">{$vo.sort}</td>
+                                    <td>{$vo.start_time|date='Y/m/d',###} - {$vo.end_time|date='Y/m/d',###}</td>
+                                    <td>
+                                        <label class="list-status banner-status">
+                                            <input class="checkbox-slider toggle colored-success yesno" type="checkbox" autocomplete="off" {$vo['status']?'checked':''}>
+                                            <span class="text" title="开启状态"></span>
                                         </label>
-                                    </div>
-                                </td>
-                                <td class="input-edit" data-field="name" title="点击更新名称">{$vo.name}</td>
-                                <td>{$vo.width}x{$vo.height}</td>
-                                <td class="input-edit" data-field="sort" title="点击更新排序">{$vo.sort}</td>
-                                <td>
-                                    <label class="list-status banner-status">
-                                        <input class="checkbox-slider toggle colored-success yesno" type="checkbox" autocomplete="off" {$vo['status']?'checked':''}>
-                                        <span class="text" title="开启状态"></span>
-                                    </label>
-                                </td>
-                                <td>
-                                    <a class="btn btn-default btn-sm purple btn-edit" href="{:U('Banner/edit',array('id'=>$vo['id']))}" title="编辑">
-                                        <i class="fa fa-edit"></i> 编辑</a>
-                                    <a class="btn btn-default btn-sm danger btn-del" href="javascript:void(0);" title="删除">
-                                        <i class="fa fa-times"></i> 删除</a>
-                                </td>
-                            </tr>
-                        </volist>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-default btn-sm purple btn-edit" href="{:U('Banner/edit',array('id'=>$vo['id']))}" title="编辑">
+                                            <i class="fa fa-edit"></i> 编辑</a>
+                                        <a class="btn btn-default btn-sm danger btn-del" href="javascript:void(0);" title="删除">
+                                            <i class="fa fa-times"></i> 删除</a>
+                                    </td>
+                                </tr>
+                            </volist>
                         </tbody>
                     </table>
                     <div class="row DTTTFooter padding-left-16">

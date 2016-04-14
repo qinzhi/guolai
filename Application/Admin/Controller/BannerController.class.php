@@ -7,16 +7,79 @@ class BannerController extends AdminController {
     }
 
     public function index(){
+        $banner = D('Banner')->gets();
+        $this->assign('banner',$banner);
         $this->display();
     }
 
     public function add(){
+        if(IS_POST){
+            $banner = array(
+                'position_id' => I('post.position_id/d'),
+                'name' => I('post.name'),
+                'intro' => I('post.intro'),
+                'image' => I('post.image'),
+                'link' => I('post.link'),
+                'status' => I('post.status/d'),
+                'sort' => I('post.sort/d'),
+                'create_time' => time(),
+            );
+            $time = I('post.time');
+            if(!empty($time)){
+                list($start_time,$end_time) = explode(' - ',$time);
+                $banner['start_time'] = strtotime($start_time);
+                $banner['end_time'] = strtotime($end_time);
+            }
+            $insert_id = D('Banner')->add($banner);
+            if($insert_id > 0){
+                $this->redirect(U('Banner/index'));
+            }else{
+                $this->error('广告添加失败',U('Banner/add'));
+            }
+        }else{
+            $position = D('BannerPosition')->gets();
+            $this->assign('position',$position);
+            $this->display();
+        }
+    }
 
-        $this->display();
+    public function edit(){
+        $id = I('get.id/d');
+        if(IS_POST){
+            $banner = array(
+                'id' => $id,
+                'position_id' => I('post.position_id/d'),
+                'name' => I('post.name'),
+                'intro' => I('post.intro'),
+                'image' => I('post.image'),
+                'link' => I('post.link'),
+                'status' => I('post.status/d'),
+                'sort' => I('post.sort/d'),
+                'create_time' => time(),
+            );
+            $time = I('post.time');
+            if(!empty($time)){
+                list($start_time,$end_time) = explode(' - ',$time);
+                $banner['start_time'] = strtotime($start_time);
+                $banner['end_time'] = strtotime($end_time);
+            }
+            $result = D('Banner')->save($banner);
+            if($result > 0){
+                $this->redirect(U('Banner/index'));
+            }else{
+                $this->error('广告编辑失败',U('Banner/edit',array('id'=>$id)));
+            }
+        }else{
+            $banner = D('Banner')->find($id);
+            $this->assign('banner',$banner);
+            $position = D('BannerPosition')->gets();
+            $this->assign('position',$position);
+            $this->display();
+        }
     }
 
     public function position(){
-        $position = M('BannerPosition')->where('is_del=0')->select();
+        $position = D('BannerPosition')->gets();
         $this->assign('position',$position);
         $this->display(CONTROLLER_NAME . DS . 'Position/index');
     }
@@ -63,7 +126,7 @@ class BannerController extends AdminController {
                 $this->error('广告位更新失败',U('Banner/position_edit',array('id'=>$id)));
             }
         }else{
-            $position = M('BannerPosition')->find($id);fb($position);
+            $position = M('BannerPosition')->find($id);
             $this->assign('position',$position);
             $this->display(CONTROLLER_NAME . DS . 'Position/edit');
         }

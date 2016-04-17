@@ -18,7 +18,7 @@
     <script id="categoryTpl" type="text/html">
         {{each data as value}}
         <li class="box box-1">
-            <a class="category-list" href="javascript:;">
+            <a class="category-list" href="{:U('/goods')}">
                 <div class="category-img"><img src="{{value.icon}}"/></div>
                 <p class="category-name">{{value.name}}</p>
             </a>
@@ -53,5 +53,4 @@
         });
     </script>
 </block>
-<block name="quote-js">
-</block>
+<block name="quote-js"></block>

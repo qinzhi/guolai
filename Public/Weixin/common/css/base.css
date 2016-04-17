@@ -380,19 +380,13 @@ article,aside,details,dialog,figcaption,figure,footer,header,hgroup,nav,section,
     color: #fff;
 
 }
-.header .row-2-left .back{
+.header a{display: block;}
+.header .row-2-left .back,.header .row-3 .back,.header .row-3 .home{
     width: 4rem;
-    padding-left: 1rem;
+    text-align: center;
 }
 .header .row-2-left .title{
     padding-right: 4rem;
-}
-.header .row-2-left .back .icon:before{
-    transform:rotate(90deg);
-    -ms-transform:rotate(90deg); /* Internet Explorer */
-    -moz-transform:rotate(90deg); /* Firefox */
-    -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
-    -o-transform:rotate(90deg); /* Opera */
 }
 .footer{
     background-color: rgba(252, 252, 252, 0.9);

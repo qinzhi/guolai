@@ -13,6 +13,14 @@
             </td>
         </tr>
         <tr>
+            <th>商品描述：</th>
+            <td>
+                <div class="form-group has-feedback no-margin">
+                    <input id="intro" name="intro" class="input-sm Lwidth400" value="{$goods.intro}" type="text" maxlength="50">
+                </div>
+            </td>
+        </tr>
+        <tr>
             <th>关键字：</th>
             <td>
                 <div class="form-group has-feedback no-margin">

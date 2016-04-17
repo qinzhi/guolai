@@ -3,6 +3,7 @@
 }
 .swiper-container .swiper-slide img{
     max-width: 100%;
+    float: left;
 }
 
 /*************************首页产品列表****************************/
@@ -39,6 +40,7 @@
 }
 .product-content .product-img{
     width: 12rem;
+    height: 12rem;
 }
 .product-content .product-img img{
     width: 100%;
@@ -56,6 +58,9 @@
     font-size: 1.6rem;
     line-height: 3.5rem;
     color: #333333;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
 }
 .product-content .product-info .product_intro{
     color: #666666;
@@ -93,7 +98,6 @@
     font-weight: 100;
 }
 .product-content .product-info .product-cart_add{
-    margin-top: 2px;
     cursor: pointer;
 }
 /******************************************************/
@@ -149,6 +153,7 @@
 }
 .product-panel .product-img{
     width: 12rem;
+    height: 12rem;
 }
 .product-panel .product-img img{
     width: 100%;
@@ -163,6 +168,9 @@
 .product-panel .product-info .product_name{
     font-size: 1.6rem;
     line-height: 5rem;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
 }
 .product-panel .product-info .product_price{
     color: #ff655b;

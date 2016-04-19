@@ -19,7 +19,7 @@
     <meta name="description" content="{$seo['description']?:'水果'}">
     <meta name="keywords" content="{$seo['keywords']?:'水果'}">
     <script src="__COMMON__/js/zepto.min.js?v={$version}"></script>
-
+    <script src="__COMMON__/js/guodu.js?v={$version}"></script>
     <block name="quote-css"></block>
     <block name="js"></block>
 </head>

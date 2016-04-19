@@ -6,13 +6,15 @@ var purchase = {
     input: null,
     action: 'up',
     maxNum: 0,
+    num: 1,
+    goods_id: 0,
     close: function(){
         this.shade.removeClass('fade_toggle');
         this.panel.removeClass('active');
         var section = this.section;
         setTimeout(function(){
             section.remove();
-        },300)
+        },300);
     },
     show: function(){
         var me = this;
@@ -25,16 +27,27 @@ var purchase = {
        return parseInt(this.input.val());
     },
     setNum: function(num){
-        this.input.val(num);
+        this.num = num;
+        this.input.val(this.num);
         return this;
     },
     updateCart: function(){
-        var num = this.getNum()
-        if(this.action == 'down' && num > 1){
-            this.setNum(--num);
-        }else if(this.action == 'up' && num < this.maxNum){
-            this.setNum(++num);
+        if(this.action == 'down' && this.num > 1){
+            this.setNum(this.num - 1);
+        }else if(this.action == 'up' && this.num < this.maxNum){
+            this.setNum(this.num + 1);
         }
+    },
+    add: function(){
+        this.close();
+        var data = {};
+        data.goods_id = this.goods_id;
+        data.num = this.num;
+        loading.show('正在加入购物车...');
+        $.post('/cart/add',data,function(){
+            loading.hide();
+        });
+        return this;
     },
     setAction: function(action){
         this.action = action;
@@ -62,6 +75,7 @@ $(function(){
         var sku = purchase.maxNum = $(this).data('sku');
         var unit = $(this).data('unit');
         var rule = JSON.parse($(this).data('rule'));
+        purchase.goods_id = $(this).data('id');
 
         var section = purchase.section = $('<section class="product-purchasing"></section>');
         section.append('<div class="all-shade"></div>')
@@ -137,7 +151,7 @@ $(function(){
                             '</div>' +
                     '</div>');
         action.find('.product-ok').click(function(){
-            purchase.close();
+            purchase.add();
         });
 
 

@@ -67,7 +67,7 @@
                             <div class="clear"></div>
                         </div>
                         <div class="product-cart_add clear">
-                            <i class="icon icon-add cart_add" data-rule='{$vo.rule|json_encode}' data-sku="{$vo.store_nums}" data-unit="{$vo.unit}"></i>
+                            <i class="icon icon-add cart_add" data-rule='{$vo.rule|json_encode}' data-sku="{$vo.store_nums}" data-unit="{$vo.unit}" data-id="{$vo.id}"></i>
                         </div>
                     </div>
                 </li>

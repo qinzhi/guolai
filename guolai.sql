@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-04-17 21:34:14
+Date: 2016-04-19 21:55:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -242,6 +242,24 @@ CREATE TABLE `guolai_banner_position` (
 -- Records of guolai_banner_position
 -- ----------------------------
 INSERT INTO `guolai_banner_position` VALUES ('1', '首页Banner', '', '640', '320', '1460273089', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for `guolai_cart`
+-- ----------------------------
+DROP TABLE IF EXISTS `guolai_cart`;
+CREATE TABLE `guolai_cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(11) NOT NULL COMMENT '商品ID',
+  `user_id` int(11) NOT NULL COMMENT '会员ID',
+  `num` mediumint(8) NOT NULL DEFAULT '1' COMMENT '数量',
+  `update_time` int(10) NOT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`),
+  KEY `goods_id` (`goods_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='购物车表';
+
+-- ----------------------------
+-- Records of guolai_cart
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `guolai_goods`
@@ -483,10 +501,9 @@ CREATE TABLE `guolai_session` (
   `session_data` mediumblob,
   PRIMARY KEY (`id`,`session_id`),
   UNIQUE KEY `session_id` (`session_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=2425 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2500 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of guolai_session
 -- ----------------------------
-INSERT INTO `guolai_session` VALUES ('2369', 'ktvdlp1pfo7196sbe8e1qe0nh4', '1460862062', '');
-INSERT INTO `guolai_session` VALUES ('2424', '2ercg3ud7c6cvoohnbq1bql2k5', '1460862975', '');
+INSERT INTO `guolai_session` VALUES ('2499', '2gnjhjdf7mcn843u9404qstqt5', '1461075466', '');

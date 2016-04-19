@@ -7,8 +7,7 @@
  */
 namespace Weixin\Model;
 
-use Think\Model;
-class GoodsModel extends Model{
+class GoodsModel extends CommonModel{
 
     const TABLE = 'goods_category';
 
@@ -51,6 +50,20 @@ class GoodsModel extends Model{
             );
         }
         return $arr;
+    }
+
+    /**
+     * 判断是否存在该商品
+     * @param $id
+     * @return bool
+     */
+    public function hasGoodsById($id){
+        $where = array(
+            self::FIELD_ID => $id,
+            self::FIELD_IS_DEL => self::DEL_NO
+        );
+        $goods = $this->where($where)->find();
+        return !empty($goods)?:false;
     }
 
 }
